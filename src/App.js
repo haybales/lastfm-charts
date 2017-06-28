@@ -43,11 +43,11 @@ class App extends Component {
     }
     axios.all(reqlist)
     .then(function(list){
-      console.log(list);
       for (var i = 0; i < list.length; i++) {
         lists.push(list[i].data.weeklyartistchart);
       };
     }).then(() => {
+      console.log(lists);
       this.setState({
         times: this.state.times,
         artistlists: lists,

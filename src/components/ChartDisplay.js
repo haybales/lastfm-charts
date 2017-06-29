@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-var LineChart = require("react-chartjs").Line;
+import Chart from 'chart.js';
+import SubHeader from './SubHeader';
+
+
 
 export default class ChartDisplay extends Component {
 
@@ -9,9 +12,48 @@ export default class ChartDisplay extends Component {
     this.state={
       from: 1494158400,
       to: 1497787200,
-      theList: this.cullList(props.artistLists, 1494158400, 1497787200)
+      theList: this.cullList(props.artistLists, 1494158400, 1497787200),
+      ctx: "",
+      lines: "",
+      top: 10
     }
   }
+
+
+
+
+  componentDidMount(){
+    this.state.ctx = this.refs.chart.getContext('2d');
+    const data = {
+      labels: this.getTimes(this.state.from, this.state.to),
+      datasets: this.datasetGenerator(this.getArtists())
+    }
+    const options = {
+      responsive: true,
+      maintainAspectRatio: true,
+      datasetFill: false,
+      scales: {
+        yAxes: [{
+          ticks: {
+            reverse: true
+          }
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+            mode: 'point',
+        }
+    }
+    this.state.lines = new Chart(this.state.ctx, {
+      type: 'line',
+      data: data,
+      options: options
+    })
+
+  }
+
 
 
 
@@ -30,7 +72,7 @@ export default class ChartDisplay extends Component {
     var artists = [];
 
     for(var i=0; i<this.state.theList.length; i++){
-      for(var j=0; j<5; j++){
+      for(var j=0; j<this.state.top; j++){
         if(this.state.theList[i].artist[j]){
           if(artists.indexOf(this.state.theList[i].artist[j])<0){
             artists.push(this.state.theList[i].artist[j].name)
@@ -38,8 +80,10 @@ export default class ChartDisplay extends Component {
         }
       }
     }
-    console.log("got the artist name list.");
-    return artists;
+
+    let uniq = a => [...new Set(a)];
+    console.log("got the artist name list: "+uniq(artists));
+    return uniq(artists);
   }
 
 
@@ -47,11 +91,11 @@ export default class ChartDisplay extends Component {
   scoreArrayForArtist(artistName){
     var results = []
     for(var i=0; i<this.state.theList.length; i++){
-      var num = 0;
-      for(var j=0; j<5; j++){
+      var num = null;
+      for(var j=0; j<this.state.top; j++){
         if(this.state.theList[i].artist[j]){
           if(this.state.theList[i].artist[j].name === artistName){
-            num = 5-j;
+            num = j+1;
           }
         }
       }
@@ -63,11 +107,18 @@ export default class ChartDisplay extends Component {
 
   datasetGenerator(artistNames){
     var datasets=[];
+
     for(var i=0; i<artistNames.length; i++){
+      var color = this.getRandomColor()
       datasets.push({
         label: artistNames[i],
-        fillColor: 'rgba(255, 99, 132, 0)',
-        strokeColor: this.getRandomColor(),
+        borderColor: color,
+        pointBackgroundColor: color,
+        pointHitRadius: 20,
+        cubicInterpolationMode: 'default',
+        lineTension: 0.3,
+        fill: false,
+        steppedLine: false,
         data: this.scoreArrayForArtist(artistNames[i]),
       });
     }
@@ -89,31 +140,83 @@ export default class ChartDisplay extends Component {
   getTimes=()=>{
     var times=[];
     for(var i=0;i<this.state.theList.length; i++){
-        times.push(this.state.theList[i]["@attr"].from);
+        times.push(this.timeConverter(this.state.theList[i]["@attr"].from));
     }
     return times;
   }
 
-
-  times = () => {
-    var datasets = this.datasetGenerator(this.getArtists());
-    return(
-      <LineChart data={{
-        labels: this.getTimes(this.state.from, this.state.to),
-        datasets: datasets,
-        tooltips: {
-          mode: 'label'
-        }
-      }} width="800" height="600" />
-    );
+  timeConverter=(UNIX_timestamp)=>{
+    var a = new Date(UNIX_timestamp * 1000);
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var year = a.getFullYear();
+    var month = months[a.getMonth()];
+    var date = a.getDate();
+    var time = month + ' ' + date + ' ' + year ;
+    return time;
   }
 
 
 
+componentDidUpdate(){
+  this.state.ctx = this.refs.chart.getContext('2d');
+  const data = {
+    labels: this.getTimes(this.state.from, this.state.to),
+    datasets: this.datasetGenerator(this.getArtists())
+  }
+  const options = {
+    responsive: true,
+    maintainAspectRatio: true,
+    datasetFill: false,
+    scales: {
+      yAxes: [{
+        ticks: {
+          reverse: true
+        }
+      }],
+    },
+    legend: {
+      display: false
+    },
+    tooltips: {
+          mode: 'point'
+      }
+  }
+
+  this.state.lines.destroy();
+  this.state.lines = new Chart(this.state.ctx, {
+    type: 'line',
+    data: data,
+    options: options
+  })
+}
+
+  times = () => {
+    return(
+      <canvas className="chart" ref="chart" />
+    );
+  }
+
+  changeFrom = (time) => {
+    this.setState({
+      ...this.state,
+      theList: this.cullList(this.props.artistLists, time, this.state.to),
+      from: time
+    });
+
+
+  }
+  changeTo = (time) => {
+    this.setState({
+      ...this.state,
+      theList: this.cullList(this.props.artistLists, this.state.from, time),
+      to: time
+    });
+  }
 
   render(){
     return(
       <div className="container">
+        <SubHeader changeFrom={this.changeFrom} changeTo={this.changeTo} user={this.props.artistLists[0]["@attr"].user} from={this.state.from} to={this.state.to} />
         {this.times()}
       </div>
     );

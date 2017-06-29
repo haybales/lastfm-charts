@@ -10,11 +10,40 @@ body{
   font-weight: lighter;
 }
 
+.subheader{
+  padding: 2em;
+}
+
+.pickers{
+  float: right;
+}
+
+.pickers h2{
+  margin-left: 1em;
+}
+
+.pickers input{
+  width: 7em;
+  height: 2em;
+  padding-left: 0.5em;
+  border: 1px solid #AAA;
+  transform: translateY(-0.17em);
+  font-family: monospace;
+}
+
+.subheader h2{
+  display: inline;
+}
+
 .no-search{
   text-align: center;
   font-size: 2em;
-  padding-top: 1em;
+  padding-top: 5em;
   color: #D0D0D0;
+}
+
+.loading{
+  color: #AAEEAA;
 }
 
 .container{
@@ -40,7 +69,7 @@ body{
   padding: 0;
 }
 
-input {
+form input {
   font-size: 1.12em;
   height: 46px;
   padding-bottom: 1em;
@@ -52,7 +81,7 @@ input {
   transition: border-color .4s;
 }
 
-input:focus {
+form input:focus {
   border-color: #c1c1c1;
 }
 

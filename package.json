@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "axios": "^0.16.2",
-    "chart.js": "^1.1.1",
-    "chartjs": "^0.3.24",
+    "chart.js": "^2.6.0",
+    "moment": "^2.18.1",
     "react": "^15.6.1",
-    "react-chartjs": "^0.8.0",
+    "react-addons-shallow-compare": "^15.6.0",
+    "react-datepicker": "^0.48.0",
+    "react-dates": "^12.2.1",
     "react-dom": "^15.6.1"
   },
   "devDependencies": {

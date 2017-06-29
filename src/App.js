@@ -64,7 +64,7 @@ class App extends Component {
         <Header onSearch={this.performSearch.bind(this)}/>
         {this.state.times.length===0 ?
           <p className="no-search">Enter a username above</p>
-          : (this.state.artistlists.length===0 ? <p className="no-search">Loading data...</p>  : <ChartDisplay artistLists={this.state.artistlists} />)}
+          : (this.state.artistlists.length===0 ? <p className="no-search loading">Loading data...</p>  : <ChartDisplay artistLists={this.state.artistlists} />)}
       </div>
     );
   }

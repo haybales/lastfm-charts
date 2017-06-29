@@ -2,6 +2,7 @@
   "name": "lastfm-charts",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://samneillfurr.com/projects/lastfm",
   "dependencies": {
     "axios": "^0.16.2",
     "chart.js": "^2.6.0",

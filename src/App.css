@@ -10,6 +10,21 @@ body{
   font-weight: lighter;
 }
 
+footer{
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: white;
+  padding: 1em;
+  font-style: oblique;
+  color: #555;
+  font-size: 0.8em;
+}
+
+footer span{
+  float: right;
+}
+
 .no-user{
   text-align: center;
   font-size: 2em;

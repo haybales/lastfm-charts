@@ -68,6 +68,11 @@ class App extends Component {
         {this.state.times.length===0 ?
           <p className="no-search">Enter a username above</p>
           : (this.state.artistlists.length===0 ? <p className="no-search loading">Loading data...</p>  : (this.state.artistlists[0]===undefined ? <p className="no-user">No user found</p> : <ChartDisplay artistLists={this.state.artistlists} />))}
+          <footer>
+          <div className="container">
+          <span>Made by <a href="http://samneillfurr.com">Sam Furr</a> using React.</span>
+          </div>
+          </footer>
       </div>
     );
   }

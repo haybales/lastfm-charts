@@ -6,9 +6,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 
 export default class ChartDisplay extends Component {
-  constructor(props){
-    super(props);
-  }
 
   render(){
     return(

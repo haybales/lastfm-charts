@@ -11,6 +11,7 @@ class App extends Component {
       times: [],
       artistlists: [],
       user: '',
+      status: ''
 
     };
   }
@@ -58,13 +59,15 @@ class App extends Component {
     });
   }
 
+
+
   render() {
     return (
       <div className="lastfmcharts">
         <Header onSearch={this.performSearch.bind(this)}/>
         {this.state.times.length===0 ?
           <p className="no-search">Enter a username above</p>
-          : (this.state.artistlists.length===0 ? <p className="no-search loading">Loading data...</p>  : <ChartDisplay artistLists={this.state.artistlists} />)}
+          : (this.state.artistlists.length===0 ? <p className="no-search loading">Loading data...</p>  : (this.state.artistlists[0]===undefined ? <p className="no-user">No user found</p> : <ChartDisplay artistLists={this.state.artistlists} />))}
       </div>
     );
   }
